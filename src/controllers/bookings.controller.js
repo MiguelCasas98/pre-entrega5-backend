@@ -1,48 +1,56 @@
-import BookingManager from "../managers/BookingManager.js";
-import ServiceManager from "../managers/ServiceManager.js";
+import BookingsService from "../services/bookings.service.js";
 
-const bookingManager = new BookingManager();
-const serviceManager = new ServiceManager();
+const bookingsService = new BookingsService();
 
 export const createBooking = async (req, res) => {
-  const data = req.body;
+  try {
+    const data = req.body;
+    const booking = await bookingsService.createBooking(data);
 
-  const booking = await bookingManager.createBooking(data);
+    if (booking?.error) {
+      return res.status(400).json(booking);
+    }
 
-  if (!booking) {
-    return res.status(400).json({ error: "Faltan campos obligatorios" });
+    res.status(201).json(booking);
+  } catch (error) {
+    console.error("Error en createBooking:", error);
+    res.status(500).json({ error: "Error interno al crear la reserva" });
   }
-
-  res.status(201).json(booking);
 };
 
 export const getBookingById = async (req, res) => {
-  const { bid } = req.params;
-  const booking = await bookingManager.getBookingById(Number(bid));
+  try {
+    const { bid } = req.params;
+    const booking = await bookingsService.getBookingById(Number(bid));
 
-  if (!booking) {
-    return res.status(404).json({ error: "Reserva no encontrada" });
+    if (!booking) {
+      return res.status(404).json({ error: "Reserva no encontrada" });
+    }
+
+    res.status(200).json(booking);
+  } catch (error) {
+    console.error("Error en getBookingById:", error);
+    res.status(500).json({ error: "Error interno al obtener la reserva" });
   }
-
-  res.status(200).json(booking);
 };
 
 export const addServiceToBooking = async (req, res) => {
-  const { bid, sid } = req.params;
+  try {
+    const { bid, sid } = req.params;
 
-  const service = await serviceManager.getServiceById(Number(sid));
-  if (!service) {
-    return res.status(404).json({ error: "Servicio no encontrado" });
+    const updatedBooking = await bookingsService.addServiceToBooking(
+      Number(bid),
+      Number(sid)
+    );
+
+    if (updatedBooking?.error) {
+      const status = updatedBooking.error.includes("no existe") ? 404 : 400;
+      return res.status(status).json(updatedBooking);
+    }
+
+    res.status(200).json(updatedBooking);
+  } catch (error) {
+    console.error("Error en addServiceToBooking:", error);
+    res.status(500).json({ error: "Error interno al agregar servicio a la reserva" });
   }
-
-  const updatedBooking = await bookingManager.addServiceToBooking(
-    Number(bid),
-    Number(sid)
-  );
-
-  if (!updatedBooking) {
-    return res.status(404).json({ error: "Reserva no encontrada" });
-  }
-
-  res.status(200).json(updatedBooking);
 };

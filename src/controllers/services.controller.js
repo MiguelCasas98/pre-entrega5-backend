@@ -1,57 +1,76 @@
-import ServiceManager from "../managers/ServiceManager.js";
+import ServicesService from "../services/services.service.js";
 
-const serviceManager = new ServiceManager();
+const servicesService = new ServicesService();
 
 export const getServices = async (req, res) => {
-  const { category, available } = req.query;
-  const services = await serviceManager.getServices({ category, available });
-  res.status(200).json(services);
+  try {
+    const { category, available } = req.query;
+    const services = await servicesService.getServices({ category, available });
+    res.status(200).json(services);
+  } catch (error) {
+    console.error("Error en getServices:", error);
+    res.status(500).json({ error: "Error interno al obtener servicios" });
+  }
 };
 
 export const getServiceById = async (req, res) => {
-  const { sid } = req.params;
-  const service = await serviceManager.getServiceById(Number(sid));
+  try {
+    const { sid } = req.params;
+    const service = await servicesService.getServiceById(Number(sid));
 
-  if (!service) {
-    return res.status(404).json({ error: "Servicio no encontrado" });
+    if (!service) {
+      return res.status(404).json({ error: "Servicio no encontrado" });
+    }
+
+    res.status(200).json(service);
+  } catch (error) {
+    console.error("Error en getServiceById:", error);
+    res.status(500).json({ error: "Error interno al obtener el servicio" });
   }
-
-  res.status(200).json(service);
 };
 
 export const createService = async (req, res) => {
-  const data = req.body;
-
-  const newService = await serviceManager.addService(data);
-
-  if (!newService) {
-    return res.status(400).json({ error: "Faltan campos obligatorios" });
+  try {
+    const data = req.body;
+    const newService = await servicesService.createService(data);
+    res.status(201).json(newService);
+  } catch (error) {
+    console.error("Error en createService:", error);
+    res.status(500).json({ error: "Error interno al crear el servicio" });
   }
-
-  res.status(201).json(newService);
 };
 
 export const updateService = async (req, res) => {
-  const { sid } = req.params;
-  const data = req.body;
+  try {
+    const { sid } = req.params;
+    const data = req.body;
 
-  const updated = await serviceManager.updateService(Number(sid), data);
+    const updated = await servicesService.updateService(Number(sid), data);
 
-  if (!updated) {
-    return res.status(404).json({ error: "Servicio no encontrado" });
+    if (!updated) {
+      return res.status(404).json({ error: "Servicio no encontrado" });
+    }
+
+    res.status(200).json(updated);
+  } catch (error) {
+    console.error("Error en updateService:", error);
+    res.status(500).json({ error: "Error interno al actualizar el servicio" });
   }
-
-  res.status(200).json(updated);
 };
 
 export const deleteService = async (req, res) => {
-  const { sid } = req.params;
+  try {
+    const { sid } = req.params;
 
-  const deleted = await serviceManager.deleteService(Number(sid));
+    const deleted = await servicesService.deleteService(Number(sid));
 
-  if (!deleted) {
-    return res.status(404).json({ error: "Servicio no encontrado" });
+    if (!deleted) {
+      return res.status(404).json({ error: "Servicio no encontrado" });
+    }
+
+    res.status(200).json({ message: "Servicio eliminado correctamente" });
+  } catch (error) {
+    console.error("Error en deleteService:", error);
+    res.status(500).json({ error: "Error interno al eliminar el servicio" });
   }
-
-  res.status(200).json(deleted);
 };
