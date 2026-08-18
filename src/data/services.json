@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "name": "Consulta médica",
+    "description": "Consulta clínica general",
+    "duration": 30,
+    "price": 12000,
+    "category": "salud",
+    "available": true
+  },
+  {
+    "id": 2,
+    "name": "Masaje facial",
+    "description": "Sesión de 30 minutos",
+    "duration": 30,
+    "price": 3500,
+    "category": "salud",
+    "available": true
+  },
+  {
+    "id": 3,
+    "name": "Masaje facial",
+    "description": "Sesión de 30 minutos",
+    "duration": 30,
+    "price": 3500,
+    "category": "salud",
+    "available": true
+  },
+  {
+    "id": 4,
+    "name": "Masaje facial",
+    "description": "Sesión de 30 minutos",
+    "duration": 30,
+    "price": 3500,
+    "category": "salud",
+    "available": true
+  },
+  {
+    "id": 5,
+    "name": "Masaje facial",
+    "description": "Sesión de 30 minutos",
+    "duration": 30,
+    "price": 3500,
+    "category": "salud",
+    "available": true
+  }
+]

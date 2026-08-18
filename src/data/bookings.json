@@ -1,0 +1,39 @@
+[
+  {
+    "id": 1,
+    "clientName": "Miguel",
+    "clientEmail": "miguel@example.com",
+    "date": "2024-10-01",
+    "time": "15:00",
+    "status": "pendiente",
+    "services": [
+      {
+        "service": 1,
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "clientName": "Miguel",
+    "clientEmail": "miguel@example.com",
+    "date": "2024-10-01",
+    "time": "15:00",
+    "status": "pendiente",
+    "services": []
+  },
+  {
+    "id": 3,
+    "clientName": "Miguel",
+    "clientEmail": "miguel@example.com",
+    "date": "2024-10-01",
+    "time": "15:00",
+    "status": "pendiente",
+    "services": [
+      {
+        "service": 5,
+        "quantity": 2
+      }
+    ]
+  }
+]
