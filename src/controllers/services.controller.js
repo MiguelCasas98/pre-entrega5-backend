@@ -16,6 +16,11 @@ export const getServices = async (req, res) => {
 export const getServiceById = async (req, res) => {
   try {
     const { sid } = req.params;
+   
+    if (isNaN(Number(sid))) {
+      return res.status(400).json({ error: "ID inválido" });
+    }
+
     const service = await servicesService.getServiceById(Number(sid));
 
     if (!service) {
@@ -43,8 +48,13 @@ export const createService = async (req, res) => {
 export const updateService = async (req, res) => {
   try {
     const { sid } = req.params;
-    const data = req.body;
 
+   
+    if (isNaN(Number(sid))) {
+      return res.status(400).json({ error: "ID inválido" });
+    }
+
+    const data = req.body;
     const updated = await servicesService.updateService(Number(sid), data);
 
     if (!updated) {
@@ -61,6 +71,11 @@ export const updateService = async (req, res) => {
 export const deleteService = async (req, res) => {
   try {
     const { sid } = req.params;
+
+    
+    if (isNaN(Number(sid))) {
+      return res.status(400).json({ error: "ID inválido" });
+    }
 
     const deleted = await servicesService.deleteService(Number(sid));
 

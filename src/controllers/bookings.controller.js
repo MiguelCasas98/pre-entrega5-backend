@@ -21,6 +21,11 @@ export const createBooking = async (req, res) => {
 export const getBookingById = async (req, res) => {
   try {
     const { bid } = req.params;
+   
+    if (isNaN(Number(bid))) {
+      return res.status(400).json({ error: "ID inválido" });
+    }
+
     const booking = await bookingsService.getBookingById(Number(bid));
 
     if (!booking) {
@@ -37,6 +42,10 @@ export const getBookingById = async (req, res) => {
 export const addServiceToBooking = async (req, res) => {
   try {
     const { bid, sid } = req.params;
+    
+    if (isNaN(Number(bid)) || isNaN(Number(sid))) {
+      return res.status(400).json({ error: "IDs inválidos" });
+    }
 
     const updatedBooking = await bookingsService.addServiceToBooking(
       Number(bid),
