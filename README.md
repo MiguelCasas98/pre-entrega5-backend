@@ -60,13 +60,13 @@ Archivos JSON que actúan como almacenamiento persistente.
 
 # Instalación
 
-Instalar dependencias
+### Instalar dependencias
 
 ```
 npm install
 ```
 
-Crear archivo .env
+### Crear archivo .env
 
 ```
 PORT=3000
@@ -74,6 +74,7 @@ NODE_ENV=development
 ```
 
 El archivo .env no se sube al repositorio.
+
 ---
 
 # Ejecutar el proyecto
@@ -83,6 +84,7 @@ npm start
 ```
 
 El servidor se inicia en el puerto definido en .env.
+
 ---
 
 # Variables de entorno
@@ -92,6 +94,7 @@ El servidor se inicia en el puerto definido en .env.
 * NODE_ENV → entorno de ejecución
 
 Existe un archivo .env.example con los nombres de las variables.
+
 ---
 
 # Servicios
@@ -168,6 +171,7 @@ Errores:
 ---
 
 # Generación de ID
+
 El ID se genera automáticamente dentro del DAO.
 No puede enviarse desde el cliente.
 ---
@@ -189,30 +193,31 @@ Devuelve todos los servicios (con filtros opcionales).
 ### GET /api/services/:sid
 Devuelve un servicio por ID.
 
-200 si existe
+* 200 si existe
 
-404 si no existe
+* 404 si no existe
 
 ### POST /api/services
 Crea un servicio nuevo.
 
-201 si se crea
+* 201 si se crea
 
-400 si faltan campos
+* 400 si faltan campos
 
 ### PUT /api/services/:sid
 Actualiza un servicio.
 
-200 si existe
+* 200 si existe
 
-404 si no existe
+* 404 si no existe
 
 ### DELETE /api/services/:sid
 Elimina un servicio.
 
-200 si existe
+* 200 si existe
 
-404 si no existe
+* 404 si no existe
+
 ---
 
 # Ejemplo de creación (POST)
@@ -296,9 +301,9 @@ Devuelve todas las reservas.
 ### GET /api/bookings/:bid
 Devuelve una reserva por ID.
 
-200 si existe
+* 200 si existe
 
-404 si no existe
+* 404 si no existe
 
 ### POST /api/bookings
 Crea una reserva nueva.
@@ -315,6 +320,7 @@ Campos obligatorios:
 * status
 
 ### POST /api/bookings/:bid/services/:sid
+
 Agrega un servicio a una reserva.
 Si ya existe, incrementa quantity.
 ---
@@ -344,6 +350,7 @@ Configura Express, middlewares y rutas base.
 
 # server.js
 Levanta el servidor en el puerto definido en .env.
+
 ---
 
 # Rutas base
@@ -363,4 +370,5 @@ Persistencia en archivos JSON (sin base de datos).
 
 Arquitectura por capas implementada correctamente:
 router → controller → service → repository → DAO → JSON
+
 ---
