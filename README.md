@@ -99,7 +99,7 @@ Existe un archivo .env.example con los nombres de las variables.
 ---
 
 # Servicios
-### Clase ServiceManager (DAO + Repository + Service)
+### Clase ServicesService (DAO + Repository + Service)
 Administra los servicios almacenados en services.json.
 
 ### Funcionalidades
@@ -141,7 +141,7 @@ Administra los servicios almacenados en services.json.
 
 * getServiceById(id)
 
-* addService(data)
+* createService(data)
 
 * updateService(id, data)
 
@@ -287,8 +287,6 @@ Administra las reservas almacenadas en bookings.json.
 ---
 
 ### Métodos principales
-
-* getBookings()
 
 * getBookingById(id)
 
