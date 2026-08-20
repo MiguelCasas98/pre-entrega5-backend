@@ -35,5 +35,19 @@
         "quantity": 2
       }
     ]
+  },
+  {
+    "clientName": "Miguel Casas",
+    "clientEmail": "miguel@example.com",
+    "date": "2024-10-15",
+    "time": "15:00",
+    "status": "pendiente",
+    "services": [
+      {
+        "service": 1,
+        "quantity": 2
+      }
+    ],
+    "id": 4
   }
 ]

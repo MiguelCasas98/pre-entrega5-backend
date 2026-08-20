@@ -1,69 +1,79 @@
 # Administrador de Servicios y Reservas
 
-Proyecto backend hecho en Node.js utilizando Express y ESM (import/export).  
-Permite manejar un listado de servicios y un sistema básico de reservas, incluyendo la asignación de servicios a cada reserva.  
-La aplicación está desarrollada con arquitectura por capas, separando responsabilidades en routers, controllers, managers y data.
-
+Proyecto backend desarrollado en Node.js + Express utilizando ESM (import/export) y arquitectura por capas.
+Permite administrar servicios y reservas, incluyendo la asignación de servicios a cada reserva y el manejo de cantidades.
+La persistencia se realiza mediante archivos JSON.
 ---
 
 # Arquitectura del Proyecto
 
+### Estructura de carpetas
+
 ```
 src/
 ├── config/
-│    └── env.config.js
+│   └── env.config.js
 ├── controllers/
-│    ├── bookings.controller.js
-│    └── services.controller.js
+│   ├── bookings.controller.js
+│   └── services.controller.js
+├── dao/
+│   ├── bookings.dao.js
+│   └── services.dao.js
 ├── data/
-│    ├── bookings.json
-│    └── services.json
-├── managers/
-│    ├── BookingManager.js
-│    └── ServiceManager.js
+│   ├── bookings.json
+│   └── services.json
+├── repositories/
+│   ├── bookings.repository.js
+│   └── services.repository.js
 ├── routes/
-│    ├── bookings.router.js
-│    └── services.router.js
+│   ├── bookings.router.js
+│   └── services.router.js
+├── services/
+│   ├── bookings.service.js
+│   └── services.service.js
 ├── app.js
 └── server.js
 ```
 
 ### Routers
-Definen las rutas y delegan la lógica a los controllers.  
+Definen las rutas y delegan la lógica a los controllers.
 No contienen validaciones ni acceso a archivos.
 
 ### Controllers
-Reciben `req` y `res`, validan datos de entrada y llaman a los managers.  
+Reciben req y res, validan datos y llaman a los services.
 Son responsables de devolver las respuestas HTTP.
 
-### Managers
-Contienen la lógica de negocio.  
-Manipulan los archivos JSON, generan IDs, validan campos y actualizan datos.
+### Services
+Contienen la lógica de negocio: validaciones, reglas, incrementos de cantidad, filtros y manejo de errores.
+
+### Repositories
+Capa intermedia que delega en los DAOs.
+No contiene lógica de negocio.
+
+### DAOs
+Acceden directamente a los archivos JSON.
+Se encargan de leer, escribir y generar IDs.
 
 ### Data
 Archivos JSON que actúan como almacenamiento persistente.
-
 ---
 
 # Instalación
 
-Instalar dependencias:
+Instalar dependencias
 
 ```
 npm install
 ```
 
-
-Crear un archivo `.env` en la raíz del proyecto con:
+Crear archivo .env
 
 ```
 PORT=3000
 NODE_ENV=development
 ```
 
-
-(El archivo `.env` no se sube al repositorio)
-
+El archivo .env no se sube al repositorio.
 ---
 
 # Ejecutar el proyecto
@@ -72,245 +82,268 @@ NODE_ENV=development
 npm start
 ```
 
-
-El servidor se inicia en el puerto indicado en el archivo `.env`.
-
+El servidor se inicia en el puerto definido en .env.
 ---
 
 # Variables de entorno
 
-El proyecto usa dos variables:
+* PORT → puerto del servidor
 
-- PORT: puerto del servidor  
-- NODE_ENV: entorno de ejecución  
+* NODE_ENV → entorno de ejecución
 
-En el archivo `.env.example` están los nombres sin valores.
-
+Existe un archivo .env.example con los nombres de las variables.
 ---
 
 # Servicios
+### Clase ServiceManager (DAO + Repository + Service)
+Administra los servicios almacenados en services.json.
 
-## Clase ServiceManager
+### Funcionalidades
 
-La clase se encarga de manejar un listado de servicios almacenados en un archivo JSON.  
-Se ocupa de:
+* Crear servicios
 
-- Crear servicios nuevos  
-- Listar todos los servicios  
-- Buscar servicios por ID  
-- Actualizar servicios existentes  
-- Eliminar servicios  
-- Validar campos obligatorios  
-- Generar el ID automáticamente  
+* Listar servicios
 
-Cada servicio tiene:
+* Buscar por ID
 
-- id  
-- name  
-- description  
-- duration  
-- price  
-- category  
-- available  
+* Actualizar
 
+* Eliminar
+
+* Validar campos
+
+* Generar ID automáticamente
+
+### Estructura de un servicio
+
+* id
+
+* name
+
+* description
+
+* duration
+
+* price
+
+* category
+
+* available
 ---
 
-## Métodos
+# Métodos principales
 
-- getServices(): devuelve todos los servicios  
-- getServiceById(id): busca un servicio por id  
-- addService(data): agrega un servicio nuevo  
-- updateService(id, data): actualiza un servicio existente  
-- deleteService(id): elimina un servicio por id  
+* getServices()
 
+* getServiceById(id)
+
+* addService(data)
+
+* updateService(id, data)
+
+* deleteService(id)
 ---
 
-## Validaciones
+# Validaciones
 
-Los métodos POST y PUT requieren los siguientes campos:
+Campos obligatorios para POST y PUT:
 
-- name (string)  
-- description (string)  
-- duration (number)  
-- price (number)  
-- category (string)  
-- available (boolean)  
+* name (string)
 
-Si falta algún campo → 400 Bad Request  
-Si el servicio no existe → 404 Not Found  
-El ID no puede modificarse manualmente.
+* description (string)
 
+* duration (number)
+
+* price (number)
+
+* category (string)
+
+* available (boolean)
+
+Errores:
+
+* 400 → faltan campos
+
+* 404 → servicio no encontrado
 ---
 
-## Generación de ID
-
-El ID se genera automáticamente de forma incremental dentro del ServiceManager.  
-No puede ser modificado ni enviado desde el cliente.
-
+# Generación de ID
+El ID se genera automáticamente dentro del DAO.
+No puede enviarse desde el cliente.
 ---
 
-## Filtros en GET /api/services
+# Filtros en GET /api/services
+Query params disponibles:
 
-El endpoint permite filtrar servicios usando query params:
+* ?category=salud
 
-- ?category=salud  
-- ?available=true  
+* ?available=true
 
-Si no se envía ningún filtro, se devuelven todos los servicios.  
-Los filtros pueden combinarse.
-
+Se pueden combinar.
 ---
 
 # Endpoints REST — Servicios
-
 ### GET /api/services
-Devuelve todos los servicios.  
-Permite filtros opcionales por categoría y disponibilidad.
+Devuelve todos los servicios (con filtros opcionales).
 
 ### GET /api/services/:sid
-Devuelve un servicio por id.  
-- 200 si existe  
-- 404 si no existe  
+Devuelve un servicio por ID.
+
+200 si existe
+
+404 si no existe
 
 ### POST /api/services
-Crea un servicio nuevo.  
-- 201 si se crea  
-- 400 si faltan campos  
-El id se genera automáticamente.
+Crea un servicio nuevo.
+
+201 si se crea
+
+400 si faltan campos
 
 ### PUT /api/services/:sid
-Actualiza un servicio existente.  
-- 200 si existe  
-- 404 si no existe  
-No permite modificar el id.
+Actualiza un servicio.
+
+200 si existe
+
+404 si no existe
 
 ### DELETE /api/services/:sid
-Elimina un servicio.  
-- 200 si existe  
-- 404 si no existe  
+Elimina un servicio.
 
+200 si existe
+
+404 si no existe
 ---
 
-## Ejemplo de creación de servicio (POST)
+# Ejemplo de creación (POST)
 
 ```
 POST /api/services
 {
-"name": "Masaje descontracturante",
-"description": "Sesión de 60 minutos",
-"duration": 60,
-"price": 7000,
-"category": "salud",
-"available": true
-}
-
-Código
-
-Respuesta:
-
-201 Created
-{
-"id": 3,
-"name": "Masaje descontracturante",
-"description": "Sesión de 60 minutos",
-"duration": 60,
-"price": 7000,
-"category": "salud",
-"available": true
+  "name": "Masaje descontracturante",
+  "description": "Sesión de 60 minutos",
+  "duration": 60,
+  "price": 7000,
+  "category": "salud",
+  "available": true
 }
 ```
 
+Respuesta:
 
+```
+201 Created
+{
+  "id": 3,
+  "name": "Masaje descontracturante",
+  "description": "Sesión de 60 minutos",
+  "duration": 60,
+  "price": 7000,
+  "category": "salud",
+  "available": true
+}
+```
 ---
 
 # Reservas
+### Clase BookingManager (DAO + Repository + Service)
+Administra las reservas almacenadas en bookings.json.
 
-## Clase BookingManager
+### Funcionalidades
 
-Administra las reservas almacenadas en `bookings.json`.  
-Permite:
+* Crear reservas
 
-- Crear reservas  
-- Listar todas las reservas  
-- Buscar reservas por ID  
-- Agregar servicios a una reserva  
-- Incrementar la cantidad de un servicio si ya existe en la reserva  
+* Listar reservas
 
-Cada reserva tiene:
+* Buscar por ID
 
-- id  
-- clientName  
-- clientEmail  
-- date  
-- time  
-- status  
-- services (array)  
+* Agregar servicios a una reserva
 
+* Incrementar cantidad si el servicio ya existe
+
+### Estructura de una reserva
+
+* id
+
+* clientName
+
+* clientEmail
+
+* date
+
+* time
+
+* status
+
+* services (array)
 ---
 
-## Métodos
+### Métodos principales
 
-- getBookings(): devuelve todas las reservas  
-- getBookingById(id): busca una reserva por id  
-- createBooking(data): crea una reserva nueva  
-- addServiceToBooking(bid, sid): agrega un servicio a la reserva o incrementa su cantidad  
+* getBookings()
 
+* getBookingById(id)
+
+* createBooking(data)
+
+* addServiceToBooking(bid, sid)
 ---
 
 # Endpoints REST — Reservas
-
 ### GET /api/bookings
 Devuelve todas las reservas.
 
 ### GET /api/bookings/:bid
-Devuelve una reserva por id.  
-- 200 si existe  
-- 404 si no existe  
+Devuelve una reserva por ID.
+
+200 si existe
+
+404 si no existe
 
 ### POST /api/bookings
-Crea una reserva nueva.  
+Crea una reserva nueva.
 Campos obligatorios:
 
-- clientName  
-- clientEmail  
-- date  
-- time  
-- status  
+* clientName
+
+* clientEmail
+
+* date
+
+* time
+
+* status
 
 ### POST /api/bookings/:bid/services/:sid
-Agrega un servicio a una reserva.  
-Si el servicio ya existe dentro de la reserva, incrementa `quantity`.
+Agrega un servicio a una reserva.
+Si ya existe, incrementa quantity.
+---
 
-Ejemplo de respuesta:
+# Ejemplo de agregar servicio
 
 ```
 {
-"id": 1,
-"clientName": "Miguel",
-"clientEmail": "miguel@example.com",
-"date": "2024-10-01",
-"time": "15:00",
-"status": "pendiente",
-"services": [
-{
-"service": 1,
-"quantity": 2
-}
-]
+  "id": 1,
+  "clientName": "Miguel",
+  "clientEmail": "miguel@example.com",
+  "date": "2024-10-01",
+  "time": "15:00",
+  "status": "pendiente",
+  "services": [
+    {
+      "service": 1,
+      "quantity": 2
+    }
+  ]
 }
 ```
-
 ---
 
 # app.js
-
-Configura Express, los middlewares y las rutas del proyecto.  
-Importa los routers y define las rutas base.
+Configura Express, middlewares y rutas base.
 
 # server.js
-
-Levanta el servidor en el puerto definido en el archivo `.env`.
-
+Levanta el servidor en el puerto definido en .env.
 ---
 
 # Rutas base
@@ -319,12 +352,15 @@ Levanta el servidor en el puerto definido en el archivo `.env`.
 /api/services
 /api/bookings
 ```
-
 ---
 
-# Notas
+# Notas importantes
+No se sube node_modules ni .env al repositorio.
 
-- No se sube `node_modules` ni `.env` al repositorio.  
-- El id de los servicios y reservas se genera automáticamente.  
-- Proyecto sin base de datos, usando almacenamiento en archivos JSON.  
-- Arquitectura por capas implementada correctamente (routers → controllers → managers → data).
+IDs de servicios y reservas se generan automáticamente.
+
+Persistencia en archivos JSON (sin base de datos).
+
+Arquitectura por capas implementada correctamente:
+router → controller → service → repository → DAO → JSON
+---
