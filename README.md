@@ -3,10 +3,10 @@
 Proyecto backend desarrollado en Node.js + Express utilizando ESM (import/export) y arquitectura por capas.
 Permite administrar servicios y reservas, incluyendo la asignación de servicios a cada reserva y el manejo de cantidades.
 La persistencia se realiza mediante archivos JSON.
+
 ---
 
 # Arquitectura del Proyecto
-
 ### Estructura de carpetas
 
 ```
@@ -56,6 +56,7 @@ Se encargan de leer, escribir y generar IDs.
 
 ### Data
 Archivos JSON que actúan como almacenamiento persistente.
+
 ---
 
 # Instalación
@@ -174,6 +175,7 @@ Errores:
 
 El ID se genera automáticamente dentro del DAO.
 No puede enviarse desde el cliente.
+
 ---
 
 # Filtros en GET /api/services
@@ -184,6 +186,7 @@ Query params disponibles:
 * ?available=true
 
 Se pueden combinar.
+
 ---
 
 # Endpoints REST — Servicios
@@ -323,6 +326,7 @@ Campos obligatorios:
 
 Agrega un servicio a una reserva.
 Si ya existe, incrementa quantity.
+
 ---
 
 # Ejemplo de agregar servicio
