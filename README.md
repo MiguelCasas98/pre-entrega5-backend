@@ -254,16 +254,14 @@ Respuesta:
 ---
 
 # Reservas
-### Clase BookingManager (DAO + Repository + Service)
+### Clase BookingsService (DAO + Repository + Service)
 Administra las reservas almacenadas en bookings.json.
 
 ### Funcionalidades
 
 * Crear reservas
 
-* Listar reservas
-
-* Buscar por ID
+* Buscar reservas por ID
 
 * Agregar servicios a una reserva
 
@@ -296,8 +294,6 @@ Administra las reservas almacenadas en bookings.json.
 ---
 
 # Endpoints REST — Reservas
-### GET /api/bookings
-Devuelve todas las reservas.
 
 ### GET /api/bookings/:bid
 Devuelve una reserva por ID.
